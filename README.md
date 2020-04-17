@@ -1,3 +1,4 @@
+# DEPRECATED
 # docker-react-node
 A scaffolding for dockerizing react and node
 
@@ -28,3 +29,4 @@ In this case, last 2500 lines will be displayed
 - go to root project
 - docker exec -i 'id_container_mongo' sh -c 'mongorestore --archive' < db.dump
 
+# DEPRECATED
