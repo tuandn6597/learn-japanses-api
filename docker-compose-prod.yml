@@ -1,0 +1,41 @@
+version: "3.6"
+
+services:
+  node-prod:
+    build:
+      context: ./node
+      dockerfile: Dockerfile-prod
+    volumes:
+      - "./node:/usr/src/app"
+    ports:
+      - ${PORT}:${PORT}
+    environment:
+      - PORT=${PORT}
+      - MONGO_URI=${MONGO_URI}
+      - TOKEN_SECRET=${TOKEN_SECRET}
+      - TOKEN_EXPIRED=${TOKEN_EXPIRED}
+      - TOKEN_ADMIN_SECRET=${TOKEN_ADMIN_SECRET}
+      - TOKEN_ADMIN_EXPIRED=${TOKEN_ADMIN_EXPIRED}
+      - MAJOR_MINOR_PATCH=${MAJOR_MINOR_PATCH}
+      - ENV=${ENV}
+      - SERVER_URL=${SERVER_URL}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+      - MONGO_PORT=${MONGO_PORT}
+      - NGINX_PORT=${NGINX_PORT}
+    depends_on:
+      - db
+      - redis
+
+  db:
+    image: mongo
+    volumes:
+      - ./data:/data/db
+    ports:
+      - ${MONGO_PORT}:${MONGO_PORT}
+    restart: always
+  redis:
+    image: redis:5.0.5
+    ports:
+      - ${REDIS_PORT}:${REDIS_PORT}
+
