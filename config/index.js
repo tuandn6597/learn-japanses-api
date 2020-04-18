@@ -1,11 +1,7 @@
 module.exports = {
+    numberOfQuestion: 5,
     numberOfAnswer: 4,
     addBotAfter: 7,
-    addBotIns: 3,
-    roomEndLoadingIns: 4,
-    roomCountdownIns: 3,
-    answerQuestionIns: 10,
-    prepareQuestionIns: 8.5,
     botAnswerMinDelay: 5,
     botAnswerMaxDelay: 9,
     delayAnimation: 2,
@@ -13,8 +9,6 @@ module.exports = {
     voteThemeIns: 10,
     voteThemeEndDelay: 1,
     keepUserIns: 2.5,
-    scores: [40, 30, 25, 20, 15, 10, 5, 5],
-    final_rank_credits: [1000, 500, 200, 100, 50, 20, 10, 0],
     roomSize: 8,
     RoomStatus: {
         CLOSE: 'CLOSE',
@@ -41,7 +35,6 @@ module.exports = {
     tag: 'GAME_',
     leng_room_id: 24,
     modeGame: ['title', 'artist'],
-    numberQuestion: [1, 2, 5, 6, 7, 8, 9, 10],
     random: {
         modeGame: 'Random',
         numberQuestion: -1,

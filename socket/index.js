@@ -10,11 +10,8 @@ exports.createServer = ({ server }) => {
     const socketRoom = (room_id) => io.to(room_id);
     io.on(EVENTS.CONNECTION, socket => {
         console.log(`connect -> socketId: ${socket.id}`)
-        try {
-            socket.on(EVENTS.QUIZ_JOIN, (data) => quizJoin({ ...data, socketId: socket.id, socket, socketRoom }))
-        } catch (e) {
+        socket.on(EVENTS.QUIZ_JOIN, (data) => quizJoin({ ...data, socketId: socket.id, socket, socketRoom }))
 
-        }
         socket.on(EVENTS.DISCONNECT, reason => {
             console.log(`disconnect -> socketId: ${socket.id}`)
 
@@ -40,7 +37,7 @@ const quizJoin = async (data) => {
         socket.emit(EVENTS.QUIZ_JOIN_SUCCESS, room);
         /** */
 
-        await roomService.startRoom({
+        await roomService.loadingPlayers({
             room,
             socketRoom
         })
@@ -50,3 +47,5 @@ const quizJoin = async (data) => {
     }
 
 }
+
+

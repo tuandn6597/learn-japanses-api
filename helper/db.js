@@ -5,6 +5,8 @@ mongoose.connect(
   process.env.MONGO_URI,
   { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true }
 )
+.then(res => console.log('mongoose connect'))
+.catch(error => console.log('mongoose connect error' + error.message))
 mongoose.Promise = global.Promise
 module.exports = {
   User: require('../components/users/user.model'),

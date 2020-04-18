@@ -37,21 +37,27 @@ const RoomUserSchema = new mongoose.Schema({
 
 }, { _id: false })
 
+const UserAnswerSchema = new mongoose.Schema({
+    user: {
+        type: mongoose.Schema.ObjectId,
+        ref: 'User'
+    },
+    answer_id: Number,
+    answerAtSecond: {
+        type: Number,
+        default: 0
+    }
+
+})
+
 const QuestionSchema = new mongoose.Schema({
     id: {
         type: mongoose.Schema.ObjectId,
         ref: 'Vocabulary'
     },
-    start_at: Date,
-    answers: [{
-        voca_id: String,
-    }],
+    answers: [String],
     answer_id: Number,
-    user_answers: [{
-        user_id: mongoose.SchemaTypes.Mixed, // from 'users.user_id'
-        answer_id: Number, // answer index
-        answered_at_odd: Number
-    }]
+    user_answers: [UserAnswerSchema]
 
 })
 

@@ -14,6 +14,8 @@ module.exports = {
     QUIZ_END_LOADING_PLAYERS: 'quiz-end-loading-players',
     QUIZ_START_COUNTDOWN: 'quiz-start-countdown',
     QUIZ_WAIT_ANIMATION: 'quiz-wait-animation',
+    QUIZ_MAKE_QUESTIONS: 'quiz-make-question',
+    QUIZ_RETURN_QUESTIONS: 'quiz-return-questions',
 
     QUIZ_START_QUESTION: 'quiz-question',
     QUIZ_ANSWER: 'quiz-answer',
