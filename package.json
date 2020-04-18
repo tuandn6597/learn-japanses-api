@@ -5,8 +5,8 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start:prod": "node server.js",
-    "start:dev": "source env-dev.sh && nodemon server.js"
+    "start:prod": "source .env-prod.sh && node server.js",
+    "start:dev": "source .env-dev.sh && nodemon server.js"
   },
   "keywords": [],
   "author": "",

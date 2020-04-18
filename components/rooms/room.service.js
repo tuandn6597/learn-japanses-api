@@ -21,58 +21,61 @@ function randomCharacter(length) {
 
 
 exports.join = async ({ userId, socketId, topicId }) => {
-    const usersOnRoom = {
-        userId,
-        socketId
-    };
-    const room_config = await RoomConfig.findOne({});
-    const roomSize = room_config ? room_config.roomSize : config.roomSize
-    const room = await _randomRoom({ topicId, roomSize })
-    /** create new room */
-    if (!room) {
-        const [topic, user] = await Promise.all([
-            !topicId ?
-                topicService.randomTopic().then(topic => topic._id.toString()) : Promise.resolve(topicId),
-            User.findById(userId)
-        ])
+    try {
+        const usersOnRoom = {
+            userId,
+            socketId
+        };
+        const room_config = await RoomConfig.findOne({});
+        const roomSize = room_config ? room_config.roomSize : config.roomSize
+        const room = await _randomRoom({ topicId, roomSize })
+        /** create new room */
+        if (!room) {
+            const [topic, user] = await Promise.all([
+                !topicId ?
+                    topicService.randomTopic().then(topic => topic._id.toString()) : Promise.resolve(topicId),
+                User.findById(userId)
+            ])
 
-        usersOnRoom['avatar'] = avatarController.getImgUrl(user.avatar)
-        usersOnRoom['rank'] = 1;
-        usersOnRoom['username'] = user.username;
-
-        const new_room = await Room.create({
-            sizeRoom: roomSize,
-            topic: topicId,
-            status: RoomStatus.WAITING,
-            users: [usersOnRoom],
-        })
-
-        const room_id = new_room._id;
-        _rooms.set(room_id.toString(), {
-            dicUsers: {
-                [userId]: usersOnRoom
-            },
-            roomSize
-        })
-        return new_room
-    }
-    /** end create new room */
-
-    /** join room existed */
-    const rank = room.users.length + 1
-    return User.findById(userId)
-        .then((user) => {
-            usersOnRoom['avatar'] = avatarController.getImgUrl(user.avatar);
+            usersOnRoom['avatar'] = avatarController.getImgUrl(user.avatar)
+            usersOnRoom['rank'] = 1;
             usersOnRoom['username'] = user.username;
-            usersOnRoom['rank'] = rank;
-            _rooms.get(room._id.toString()).dicUsers[user._id.toString()] = usersOnRoom
-            return Room.findByIdAndUpdate(room._id, {
-                $push: {
-                    users: usersOnRoom
-                }
-            }, { new: true });
-        })
 
+            const new_room = await Room.create({
+                sizeRoom: roomSize,
+                topic: topicId,
+                status: RoomStatus.WAITING,
+                users: [usersOnRoom],
+            })
+
+            const room_id = new_room._id;
+            _rooms.set(room_id.toString(), {
+                dicUsers: {
+                    [userId]: usersOnRoom
+                },
+                roomSize
+            })
+            return new_room
+        }
+        /** end create new room */
+
+        /** join room existed */
+        const rank = room.users.length + 1
+        return User.findById(userId)
+            .then((user) => {
+                usersOnRoom['avatar'] = avatarController.getImgUrl(user.avatar);
+                usersOnRoom['username'] = user.username;
+                usersOnRoom['rank'] = rank;
+                _rooms.get(room._id.toString()).dicUsers[user._id.toString()] = usersOnRoom
+                return Room.findByIdAndUpdate(room._id, {
+                    $push: {
+                        users: usersOnRoom
+                    }
+                }, { new: true });
+            })
+    } catch (error) {
+        throw new Error(`exports.join ${error.message}`)
+    }
 }
 const _randomRoom = ({
     topicId,
@@ -143,7 +146,7 @@ const _startRoom = async ({
 
 
     } catch (error) {
-
+        console.log(`_startRoom ${error.message}`)
     }
 };
 
