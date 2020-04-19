@@ -1,6 +1,8 @@
 module.exports = {
     numberOfQuestion: 5,
     numberOfAnswer: 4,
+    scores: [40, 30, 25, 20, 15],
+    secondToAnswer: 4,
     addBotAfter: 7,
     botAnswerMinDelay: 5,
     botAnswerMaxDelay: 9,
@@ -19,6 +21,7 @@ module.exports = {
     factorX_SD: 1, // factor X of sudden-death
     maxQuestions: 10,
     orderCredits: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+
     score_SD: 1,
     medals: {
         ruby: 2,

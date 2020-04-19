@@ -19,6 +19,8 @@ function randomCharacter(length) {
     return result;
 }
 
+exports.findById = id => Room.findById(id)
+exports.findByIdAndUpdate = (id, data) => Room.findByIdAndUpdate(id, data, { new: true })
 
 exports.join = async ({ userId, socketId, topicId }) => {
     try {
@@ -142,7 +144,7 @@ const _loadingPlayers = async ({
             await _addBots(room_id);
             const questions = await prepareQuestions(room.topic)
             _rooms.get(room_id).broadcast(EVENTS.QUIZ_RETURN_QUESTIONS, questions)
-            await Room.findByIdAndUpdate(room_id, { questions });
+            await Room.findByIdAndUpdate(room_id, { questions, status: config.RoomStatus.PLAY });
 
         }, config.addBotAfter * 1000);
 

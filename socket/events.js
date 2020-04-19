@@ -16,10 +16,12 @@ module.exports = {
     QUIZ_WAIT_ANIMATION: 'quiz-wait-animation',
     QUIZ_MAKE_QUESTIONS: 'quiz-make-question',
     QUIZ_RETURN_QUESTIONS: 'quiz-return-questions',
+    QUIZ_RANK: 'quiz-rank',
 
     QUIZ_START_QUESTION: 'quiz-question',
     QUIZ_ANSWER: 'quiz-answer',
-    QUIZ_ANSWER_RESULT: 'quiz-answer-result',
+    QUIZ_AUTO_ANSWER: 'quiz-auto-answer',
+    QUIZ_ANSWER_RESPONSE: 'quiz-answer-response',
     QUIZ_PREPARE_QUESTION: 'quiz-prepare-question',
     QUIZ_CLOSED: 'quiz-closed',
     QUIZ_LINK_MUSICS: 'quiz-link-musics',

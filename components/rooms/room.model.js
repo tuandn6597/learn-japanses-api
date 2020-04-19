@@ -10,17 +10,13 @@ const RoomUserSchema = new mongoose.Schema({
     socketId: String,
     username: String,
     not_answer: Number,
-    good_answer: Number,
+    true_answer: Number,
     false_answer: Number,
     score: {
         type: Number,
         default: 0
     },
     rank: {
-        type: Number,
-        default: 0
-    },
-    credit: {
         type: Number,
         default: 0
     },
@@ -48,7 +44,7 @@ const UserAnswerSchema = new mongoose.Schema({
         default: 0
     }
 
-})
+}, { _id: false })
 
 const QuestionSchema = new mongoose.Schema({
     id: {
