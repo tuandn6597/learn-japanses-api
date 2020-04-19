@@ -142,9 +142,9 @@ const _loadingPlayers = async ({
 
         setTimeout(async () => {
             await _addBots(room_id);
-            let questions = await prepareQuestions(room.topic)
-            const room = await Room.findByIdAndUpdate(room_id, { questions, status: config.RoomStatus.PLAY });
-            questions = room.questions
+            const prepareQuestions = await prepareQuestions(room.topic)
+            const room = await Room.findByIdAndUpdate(room_id, { questions: prepareQuestions, status: config.RoomStatus.PLAY }, { new: true });
+            const questions = room.questions
             _rooms.get(room_id).broadcast(EVENTS.QUIZ_RETURN_QUESTIONS, questions)
 
         }, config.addBotAfter * 1000);
