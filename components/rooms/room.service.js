@@ -128,6 +128,11 @@ const _addBots = async (room_id, timeAdd = 0) => {
     }
 };
 
+const prepareQuestions = async (topicId) => {
+    const topic = await topicService.getById(topicId)
+    return question._makeQuestion({ numberQuestion: config.numberOfQuestion }, topic.vocabularies)
+}
+
 const _loadingPlayers = async ({
     room,
     socketRoom,
@@ -142,8 +147,8 @@ const _loadingPlayers = async ({
 
         setTimeout(async () => {
             await _addBots(room_id);
-            const prepareQuestions = await prepareQuestions(room.topic)
-            const room = await Room.findByIdAndUpdate(room_id, { questions: prepareQuestions, status: config.RoomStatus.PLAY }, { new: true });
+            const data = await prepareQuestions(room.topic)
+            const room = await Room.findByIdAndUpdate(room_id, { questions: data, status: config.RoomStatus.PLAY }, { new: true });
             const questions = room.questions
             _rooms.get(room_id).broadcast(EVENTS.QUIZ_RETURN_QUESTIONS, questions)
 
@@ -155,10 +160,5 @@ const _loadingPlayers = async ({
         console.log(`_loadingPlayers ${error.message}`)
     }
 };
-
-const prepareQuestions = async (topicId) => {
-    const topic = await topicService.getById(topicId)
-    return question._makeQuestion({ numberQuestion: config.numberOfQuestion }, topic.vocabularies)
-}
 
 exports.loadingPlayers = _loadingPlayers;
