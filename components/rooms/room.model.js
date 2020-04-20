@@ -51,6 +51,7 @@ const QuestionSchema = new mongoose.Schema({
         type: mongoose.Schema.ObjectId,
         ref: 'Vocabulary'
     },
+    question: String,
     answers: [String],
     answer_id: Number,
     user_answers: [UserAnswerSchema]
