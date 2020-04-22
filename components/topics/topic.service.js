@@ -4,6 +4,10 @@ const { Topic, User } = db
 const historyService = require('../histories/history.service')
 const avatarCtrl = require('../avatars/avatar.controller')
 const videoCtrl = require('../videos/video.controller')
+const { translate } = require("google-translate-api-browser");
+
+
+
 
 exports.create = (body) => Topic.create(body);
 
@@ -61,6 +65,30 @@ exports.randomTopic = async () => {
         avatar: avatarCtrl.getImgUrl(topic.avatar)
     }
 }
+
+const translateToVietNamese = (text) => {
+    return new Promise((resolve, reject) => {
+        translate(text, { from: 'ja', to: 'vi' })
+            .then(res => {
+                console.log('res?.text:', res.text)
+                resolve(res.text)
+            })
+            .catch(err => {
+                reject(error)
+            });
+    })
+}
+
+exports.translate = async () => {
+    const topics = await Topic.find().lean()
+    const updated = topics.map(async topic => {
+        const mean = await translateToVietNamese(topic.title)
+        await Topic.findByIdAndUpdate(topic._id, { mean }, { new: true })
+    })
+    await Promise.all(updated)
+}
+
+
 
 
 

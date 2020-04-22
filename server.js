@@ -7,8 +7,6 @@ const swaggerDocument = require('./swagger.json')
 const path = require('path')
 const morgan = require('morgan')
 const socketIO = require('./socket')
-
-
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 app.use((req, res, next) => {
@@ -18,6 +16,7 @@ app.use((req, res, next) => {
   next()
 })
 app.use(morgan('tiny'))
+
 const PORT = process.env.PORT
 app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 app.use('/api/assets', express.static(path.join(__dirname, 'assets')))

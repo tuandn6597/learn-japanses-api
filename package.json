@@ -17,6 +17,7 @@
     "csv-parser": "^2.3.2",
     "dotenv": "^8.1.0",
     "express": "^4.16.4",
+    "google-translate-api-browser": "^1.1.71",
     "joi": "^14.3.1",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.7.0",

@@ -98,7 +98,8 @@ const userSchema = new mongoose.Schema({
       type: mongoose.Schema.ObjectId,
       ref: 'Archivement'
     }
-  ]
+  ],
+  pushToken: { type: String, default: '' }
 })
 userSchema.index({ username: 1 }, { unique: true })
 const User = mongoose.model('User', userSchema)

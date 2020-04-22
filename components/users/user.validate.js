@@ -8,12 +8,13 @@ const schemas = {
     email: Joi.string().email(),
     password: Joi.string()
       .min(8)
-      .required()
+      .required(),
+    pushToken: Joi.string()
   }),
   userDelete: Joi.object().keys({
     id: Joi.string().required()
   }),
-  
+
   loginFB: Joi.object().keys({
     email: Joi.string().email(),
     name: Joi.string()
