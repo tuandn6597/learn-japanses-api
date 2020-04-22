@@ -82,7 +82,7 @@ const quizAnswer = async ({ roomId, userId, answerAtSecond, questionId, answerId
 
         await roomService.findByIdAndUpdate(roomId, { users: room.users, questions: room.questions })
 
-        socketRoom(roomId).emit(EVENTS.QUIZ_ANSWER_RESPONSE, { roomId, userId, score })
+        socketRoom(roomId).emit(EVENTS.QUIZ_ANSWER_RESPONSE, { roomId, userId, score, answerId, answerAtSecond, questionId })
     } catch (error) {
         socket.emit(EVENTS.QUIZ_JOIN_ERROR, { message: `quizAnswer throw ${error.message}` });
     }
