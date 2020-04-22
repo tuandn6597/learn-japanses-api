@@ -72,17 +72,19 @@ const quizAnswer = async ({ roomId, userId, answerAtSecond, questionId, answerId
         }
 
         let score = trueAnswerId === answerId ? parseFloat(answerAtSecond) * config.scores[index] : undefined
-
+        let avatar;
         for (var i in room.users) {
             if (room.users[i].userId == userId) {
                 room.users[i].score = score ? score + room.users[i].score : room.users[i].score;
+                score = room.users[i].score
+                avatar = room.users[i].avatar
                 break;
             }
         }
 
         await roomService.findByIdAndUpdate(roomId, { users: room.users, questions: room.questions })
 
-        socketRoom(roomId).emit(EVENTS.QUIZ_ANSWER_RESPONSE, { roomId, userId, score, answerId, answerAtSecond, questionId })
+        socketRoom(roomId).emit(EVENTS.QUIZ_ANSWER_RESPONSE, { roomId, userId, score, answerId, answerAtSecond, questionId, avatar })
     } catch (error) {
         socket.emit(EVENTS.QUIZ_JOIN_ERROR, { message: `quizAnswer throw ${error.message}` });
     }
@@ -132,7 +134,7 @@ const quizAutoAnswer = async ({ roomId, questionId, socket, socketRoom }) => {
                     })
                     await roomService.findByIdAndUpdate(roomId, { users: room.users, questions: room.questions })
 
-                    socketRoom(roomId).emit(EVENTS.QUIZ_ANSWER_RESPONSE, { roomId, userId: user.userId, score: user.score, answerAtSecond, answerId: randomAnswerId, questionId })
+                    socketRoom(roomId).emit(EVENTS.QUIZ_ANSWER_RESPONSE, { roomId, userId: user.userId, score: user.score, answerAtSecond, answerId: randomAnswerId, questionId, avatar: user.avatar })
                 }, answerAtSecond * 1000)
             }
         })
