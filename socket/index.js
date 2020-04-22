@@ -132,7 +132,7 @@ const quizAutoAnswer = async ({ roomId, questionId, socket, socketRoom }) => {
                     })
                     await roomService.findByIdAndUpdate(roomId, { users: room.users, questions: room.questions })
 
-                    socketRoom(roomId).emit(EVENTS.QUIZ_ANSWER_RESPONSE, { roomId, userId: user.userId, score: user.score })
+                    socketRoom(roomId).emit(EVENTS.QUIZ_ANSWER_RESPONSE, { roomId, userId: user.userId, score: user.score, answerAtSecond, answerId: randomAnswerId, questionId })
                 }, answerAtSecond * 1000)
             }
         })
