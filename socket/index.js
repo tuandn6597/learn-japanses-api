@@ -53,7 +53,6 @@ const quizJoin = async (data) => {
 const quizAnswer = async ({ roomId, userId, answerAtSecond, questionId, answerId, socket, socketRoom }) => {
     try {
         const index = Math.floor(parseFloat(answerAtSecond))
-        console.log('index:', index)
         const room = await roomService.findById(roomId)
         let trueAnswerId = undefined
         for (var i in room.questions) {
@@ -75,14 +74,23 @@ const quizAnswer = async ({ roomId, userId, answerAtSecond, questionId, answerId
         let avatar;
         for (var i in room.users) {
             if (room.users[i].userId == userId) {
-                room.users[i].score = score ? score + room.users[i].score : room.users[i].score;
-                score = room.users[i].score
+                score = score ? score + room.users[i].score : room.users[i].score;
                 avatar = room.users[i].avatar
                 break;
             }
         }
-
-        await roomService.findByIdAndUpdate(roomId, { users: room.users, questions: room.questions })
+        if (trueAnswerId === answerId) {
+            const updated = await roomService.updateOne({
+                _id: roomId,
+                'users.userId': userId
+            }, {
+                "$set": { "users.$.score": score }
+            }, { new: true })
+            console.log('updated:', {
+                score,
+                update: updated.nModified
+            })
+        }
 
         socketRoom(roomId).emit(EVENTS.QUIZ_ANSWER_RESPONSE, { roomId, userId, score, answerId, answerAtSecond, questionId, avatar })
     } catch (error) {
@@ -126,15 +134,24 @@ const quizAutoAnswer = async ({ roomId, questionId, socket, socketRoom }) => {
                     })
                     const index = Math.floor(parseFloat(answerAtSecond))
                     const score = trueAnswerId === randomAnswerId ? parseFloat(answerAtSecond) * config.scores[index] : undefined
-                    user.score = score ? score + user.score : user.score;
+                    const totalScore = score ? score + user.score : user.score;
+
                     room.questions[currentIndexQuestion].user_answers.push({
                         user: user.userId,
                         answer_id: randomAnswerId,
                         answerAtSecond
                     })
-                    await roomService.findByIdAndUpdate(roomId, { users: room.users, questions: room.questions })
 
-                    socketRoom(roomId).emit(EVENTS.QUIZ_ANSWER_RESPONSE, { roomId, userId: user.userId, score: user.score, answerAtSecond, answerId: randomAnswerId, questionId, avatar: user.avatar })
+                    if (trueAnswerId === randomAnswerId) {
+                        await roomService.updateOne({
+                            _id: roomId,
+                            'users.userId': user.userId
+                        }, {
+                            "$set": { "users.$.score": parseFloat(totalScore.toFixed(2)) }
+                        }, { new: true })
+                    }
+
+                    socketRoom(roomId).emit(EVENTS.QUIZ_ANSWER_RESPONSE, { roomId, userId: user.userId, score: totalScore, answerAtSecond, answerId: randomAnswerId, questionId, avatar: user.avatar })
                 }, answerAtSecond * 1000)
             }
         })

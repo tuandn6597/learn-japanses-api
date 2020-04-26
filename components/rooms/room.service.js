@@ -19,6 +19,8 @@ function randomCharacter(length) {
     return result;
 }
 
+exports.updateOne = (contidion, updateData) => Room.updateOne(contidion, updateData, { new: true })
+
 exports.findById = id => Room.findById(id)
 exports.findByIdAndUpdate = (id, data) => Room.findByIdAndUpdate(id, data, { new: true })
 
