@@ -27,6 +27,7 @@ app.use('/api/topics', require('./components/topics/topic.route'))
 app.use('/api/vocabularies', require('./components/vocabularies/vocabulary.route'))
 app.use('/api/histories', require('./components/histories/history.route'))
 app.use('/api/challenge', require('./components/challenge/challenge.route'))
+app.use('/api/alphabet', require('./components/alphabet/alphabet.route'))
 
 // handle error
 app.use(require('./middlewares/err.middleware'))

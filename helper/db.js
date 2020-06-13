@@ -18,5 +18,6 @@ module.exports = {
   History: require('../components/histories/history.model'),
   Challenge: require('../components/challenge/challenge.model'),
   Room: require('../components/rooms/room.model'),
-  RoomConfig: require('../components/room_configs/room_config.model')
+  RoomConfig: require('../components/room_configs/room_config.model'),
+  Alplabet: require('../components/alphabet/alphabet.model')
 }

@@ -1,39 +1,32 @@
 const mongoose = require('mongoose')
 const base = require('../../helper/_base_schema')
-const topic_type = {
-  CONVERSATION: 'CONVERSATION',
-  VOCABULARY: 'VOCABULARY'
+const ALPLABET_TYPE = {
+  HIRAGANA: 'hiragana',
+  KATAKANA: 'katakana'
 }
-const topicSchema = new mongoose.Schema({
+const alplabetSchema = new mongoose.Schema({
   ...base,
-  title: {
+  japaneseLetter: {
     type: String,
     required: true
   },
-  avatar: {
-    type: mongoose.Schema.ObjectId,
-    ref: 'Avatar'
+  translateLetter: {
+    type: String,
+    required: true
   },
-  conversations: [
-    {
-      type: mongoose.Schema.ObjectId,
-      ref: 'Conversation'
-    }
-  ],
-  pronounce: {
-    type: String
+  letterImageUrl: {
+    type: String,
+    required: true
   },
-  japanese: {
-    type: String
+  letterDetailImageUrl: {
+    type: String,
+    required: true
   },
-  vietnam: {
-    type: Boolean,
-    default: false
-  },
-  lesson_number: {
-    type: String
+  alplabetType: {
+    type: String,
+    default: ALPLABET_TYPE.HIRAGANA
   }
 })
-const Topic = mongoose.model('Topic', topicSchema)
-Topic.topic_type = topic_type;
-module.exports = Topic
+const Alplabet = mongoose.model('Alplabet', alplabetSchema)
+Alplabet.ALPLABET_TYPE = ALPLABET_TYPE;
+module.exports = Alplabet
