@@ -58,14 +58,16 @@ exports.getById = async (req, res, next) => {
 }
 
 exports.getImgUrl = avatarId => {
+  const baseURL = process.env.ENV === 'DEV' ? `${process.env.SERVER_URL}:${process.env.PORT}` : `${process.env.SERVER_URL}`
   return avatarId
-    ? `${process.env.SERVER_URL}:${process.env.PORT}/api/avatars/${avatarId.toString()}`
+    ? `${baseURL}/api/avatars/${avatarId.toString()}`
     : `${random_url(randomIntFromInterval(1, 1000))}`
 }
 
 exports.randomAvatarForBot = () => {
+  const baseURL = process.env.ENV === 'DEV' ? `${process.env.SERVER_URL}:${process.env.PORT}` : `${process.env.SERVER_URL}`
   const number = randomIntFromInterval(1, 16)
-  return `${process.env.SERVER_URL}:${process.env.PORT}/api/assets/bots/${number}.png`
+  return `${baseURL}/api/assets/bots/${number}.png`
 }
 
 function randomIntFromInterval(min, max) {
