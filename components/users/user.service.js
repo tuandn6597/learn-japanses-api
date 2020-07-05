@@ -89,7 +89,7 @@ exports.facebookLogin = async (body) => {
   // create new user loginByFB
 
   const user = await User.create({
-    email,
+    email: email || `${id}@gmail.com`,
     username: name,
     typeLogin: User.type_login.FB,
     hash: 'no-hash',
