@@ -13,15 +13,25 @@ exports.create = (body) => Topic.create(body);
 
 exports.getAll = async (user) => {
     const { lession_number = 1 } = user;
-    const topics = await Topic.find().select('-vocabularies').lean();
-    return topics.map(topic => {
+    const topics = await Topic.find().lean();
+    const promises = topics.map(async topic => {
+        const condition = {
+            topic: topic._id,
+            user: user._id
+        }
+        const history = await History.findOne(condition)
+        const totalCorrectAnswers = (history && history.correctAnswers.length) || 0
+        const percent = totalCorrectAnswers / topic.vocabularies.length
+        delete topic.vocabularies
         return {
             ...topic,
             avatar: avatarCtrl.getImgUrl(topic.avatar),
             video: videoCtrl.getVideo(),
-            lock: !(lession_number === parseInt(topic.lesson_number))
+            lock: !(lession_number === parseInt(topic.lesson_number)),
+            percent
         }
     })
+    return Promise.all(promises)
 }
 
 exports.getById = (id) => Topic.findById(id).populate('vocabularies');
