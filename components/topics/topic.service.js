@@ -57,7 +57,7 @@ exports.makeQuestion = async ({ id, sumQuestion, _id, numberAnswer, isGuest, use
     if (!topic)
         throw error.topicNotFound
     let vocabularies = topic.vocabularies;
-    if (history.correctAnswers.length < topic.vocabularies.length) {
+    if ((history && history.correctAnswers.length) < topic.vocabularies.length) {
         vocabularies = history.notAnswers
     }
     return question._makeQuestion({ type: 'topic', numberQuestion: sumQuestion, numberAnswer, userForWeb }, vocabularies)
