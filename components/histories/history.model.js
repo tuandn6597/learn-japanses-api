@@ -1,25 +1,42 @@
 const mongoose = require('mongoose')
 const base = require('../../helper/_base_schema')
+const answerSchema = new mongoose.Schema({
+    vocabulary: {
+        type: mongoose.Schema.ObjectId,
+        ref: 'Vocabulary'
+    },
+    correct: {
+        type: Boolean,
+        default: false
+    }
+}, { _id: false })
 const historySchema = new mongoose.Schema({
     ...base,
     topic: {
         type: mongoose.Schema.ObjectId,
         ref: 'Topic'
     },
-    complete: {
-        type: Boolean,
-        default: false
+    user: {
+        type: mongoose.Schema.ObjectId,
+        ref: 'User'
     },
-    answers: [{
-        by: mongoose.Schema.ObjectId,
-        correct: {
-            type: Boolean,
-            default: false
+    correctAnswers: [
+        {
+            type: mongoose.Schema.ObjectId,
+            ref: 'Vocabulary'
         }
-    }],
-    finish_question: {
-        type: Number,
-        default: 0
-    }
+    ],
+    incorrectAnswers: [
+        {
+            type: mongoose.Schema.ObjectId,
+            ref: 'Vocabulary'
+        }
+    ],
+    notAnswers: [
+        {
+            type: mongoose.Schema.ObjectId,
+            ref: 'Vocabulary'
+        }
+    ]
 })
 module.exports = mongoose.model('History', historySchema)

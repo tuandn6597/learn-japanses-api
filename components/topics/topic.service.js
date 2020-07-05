@@ -1,6 +1,6 @@
 const { db, error } = require('../../helper')
 const question = require('../../helper/question')
-const { Topic, User } = db
+const { Topic, User, History } = db
 const historyService = require('../histories/history.service')
 const avatarCtrl = require('../avatars/avatar.controller')
 const videoCtrl = require('../videos/video.controller')
@@ -32,21 +32,20 @@ exports.getDetails = (id, isGuest = false) => {
     return this.getById(id);
 }
 
-//todo
 exports.makeQuestion = async ({ id, sumQuestion, _id, numberAnswer, isGuest, userForWeb }) => {
     if (isGuest)
         throw error.requiredLogin
 
     let vocabularies = [];
-    const { histories } = await User.findById(_id).populate({ path: 'histories', populate: { path: 'topic', populate: 'vocabularies' } })
-    const history = histories.find(history => history.topic._id.toString() === id)
+    const condition = {
+        topic: id,
+        user: _id
+    }
+    const history = await History.findOne(condition)
     if (history) {
-        const { topic, answers } = history;
-        vocabularies = topic.vocabularies
-        answers.forEach(item => {
-            const index = vocabularies.findIndex(voca => (voca._id.toString() === item._id.toString()) && item.correct);
-            index >= 0 && vocabularies.splice(index, 1);
-        })
+        const { incorrectAnswers, notAnswers } = history
+        vocabularies = notAnswers
+        
     }
     else {
         const topics = await this.getById(id);
@@ -54,6 +53,7 @@ exports.makeQuestion = async ({ id, sumQuestion, _id, numberAnswer, isGuest, use
             throw error.topicNotFound
         vocabularies = topics.vocabularies
     }
+    console.log('vocabularies:', vocabularies.length)
     return question._makeQuestion({ type: 'topic', numberQuestion: sumQuestion, numberAnswer, userForWeb }, vocabularies)
 }
 
