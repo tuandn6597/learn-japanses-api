@@ -36,24 +36,20 @@ exports.makeQuestion = async ({ id, sumQuestion, _id, numberAnswer, isGuest, use
     if (isGuest)
         throw error.requiredLogin
 
-    let vocabularies = [];
     const condition = {
         topic: id,
         user: _id
     }
-    const history = await History.findOne(condition)
-    if (history) {
-        const { incorrectAnswers, notAnswers } = history
-        vocabularies = notAnswers
-        
+    const [history, topic] = await Promise.all([
+        History.findOne(condition).populate('notAnswers'),
+        this.getById(id)
+    ])
+    if (!topic)
+        throw error.topicNotFound
+    let vocabularies = topic.vocabularies;
+    if (history.correctAnswers.length < topic.vocabularies.length) {
+        vocabularies = history.notAnswers
     }
-    else {
-        const topics = await this.getById(id);
-        if (!topics)
-            throw error.topicNotFound
-        vocabularies = topics.vocabularies
-    }
-    console.log('vocabularies:', vocabularies.length)
     return question._makeQuestion({ type: 'topic', numberQuestion: sumQuestion, numberAnswer, userForWeb }, vocabularies)
 }
 

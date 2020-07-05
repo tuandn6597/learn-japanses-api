@@ -15,6 +15,7 @@ exports.setHistory = async (body, userId) => {
         Topic.findById(topicId)
     ])
     if (history) {
+        if (history.correctAnswers.length === topic.vocabularies.length) return history
         const promises = topic.vocabularies.map(vocabulary => {
             const userAnswer = answers.find(item => item.question === vocabulary.toString())
             if (userAnswer) {
@@ -31,7 +32,7 @@ exports.setHistory = async (body, userId) => {
                 }
                 return History.findByIdAndUpdate(history._id, { $addToSet: { incorrectAnswers: vocabulary } }, { new: true })
             }
-            return History.findByIdAndUpdate(history._id, { $addToSet: { notAnswers: vocabulary } }, { new: true })
+            return Promise.resolve(null)
         })
 
         await Promise.all(promises)
@@ -56,4 +57,19 @@ exports.setHistory = async (body, userId) => {
     });
     const createdHistory = await History.create({ ...condition, correctAnswers, incorrectAnswers, notAnswers });
     return createdHistory
+}
+
+exports.tracking = async (topicId, userId) => {
+    const condition = {
+        topic: topicId,
+        user: userId
+    }
+    const [history, topic] = await Promise.all([
+        History.findOne(condition),
+        Topic.findById(topicId)
+    ])
+    if (!history || !topic) return 0
+    const percent = (history.correctAnswers.length * 100) / topic.vocabularies.length
+    return percent
+
 }
